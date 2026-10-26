@@ -1,0 +1,29 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Twitch Stream Health | observations réelles</title>
+<link rel="stylesheet" href="/style.css"><script type="module" src="/app.mjs"></script></head>
+<body><main>
+<header><h1>Stream Health <small>surveillance locale expérimentale</small></h1>
+<p>Ce témoin ne peut pas encore devenir vert : <strong>aucune sonde de lecture spectateur n'est installée</strong>.
+Twitch et OBS apportent une première surveillance réelle de l'émission, mais pas de preuve complète de réception.</p></header>
+<section class="stage">
+<div id="indicator" tabindex="0" aria-live="polite" role="status">
+  <span id="dot" class="dot gray"></span><span id="short-label">Inconnu</span>
+</div>
+<section class="detail" aria-label="Détails de surveillance">
+<strong id="reason">Pas encore de mesure</strong><p id="last">-</p>
+<div class="sources">
+<div><b>Twitch</b><p id="twitch">En attente</p></div>
+<div><b>OBS</b><p id="obs">En attente</p></div>
+<div><b>Spectateur</b><p id="viewer">Aucune sonde</p></div>
+</div>
+</section>
+</section>
+<section class="controls"><h2>Contrôle de session</h2>
+<p>Arme la surveillance avant ton direct. Désarme-la lorsque tu termines volontairement. Sans armer, une fin normale de live ne doit pas provoquer d'alerte rouge.</p>
+<button id="arm">Armer la surveillance</button>
+<button id="disarm">Fin de stream volontaire</button>
+<p id="message" aria-live="polite">Le navigateur interroge uniquement ton serveur local. Aucune clé Twitch ou OBS ne lui est envoyée.</p>
+</section>
+<footer>Prototype non distribuable : statut Twitch Helix vérifié par API (si configurée), état OBS WebSocket, **aucun son et aucune image spectateur confirmés**. L'état gris est volontaire en cas d'observations manquantes.</footer>
+</main></body></html>
