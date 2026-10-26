@@ -24,7 +24,7 @@ test("orange for degradations but not missing observability",()=>{
   assert.equal(assess(snapshot({viewer:{videoPlaying:true,framesAdvancing:true,audioTrack:false,audioActive:false,at:T}}),T).color,HEALTH.DEGRADED);
   assert.equal(assess(snapshot({viewer:{videoPlaying:true,framesAdvancing:true,audioTrack:true,audioActive:false,at:T}}),T).color,HEALTH.DEGRADED);
   assert.equal(assess(snapshot({obs:{streaming:true,reconnecting:true,at:T}}),T).color,HEALTH.DEGRADED);
-  assert.equal(assess(snapshot({obs:{streaming:true,dropRatio:.3,at:T}}),T).color,HEALTH.DEGRADED);
+  assert.equal(assess(snapshot({obs:{streaming:true,framesAdvancing:true,dropRatio:.3,at:T}}),T).color,HEALTH.DEGRADED);
 });
 test("intentional silence and intentional ending never cause red",()=>{
   assert.equal(assess(snapshot({soundExpected:false,viewer:{
