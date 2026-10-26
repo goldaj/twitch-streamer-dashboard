@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check src/health.mjs && node --check src/twitch-helix.mjs && node --check src/obs-websocket.mjs && node --check src/collector.mjs && node --check monitor/server.mjs && node --check monitor/app.mjs && node --check web/app.mjs",
+    "check": "node --check src/health.mjs && node --check src/twitch-helix.mjs && node --check src/obs-websocket.mjs && node --check src/collector.mjs && node --check monitor/server.mjs && node --check monitor/app.mjs && node --check probe/app.mjs && node --check src/probe/audio.mjs && node --check web/app.mjs",
     "start": "node monitor/server.mjs"
   }
 }

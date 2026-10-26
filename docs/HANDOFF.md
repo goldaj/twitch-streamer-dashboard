@@ -37,3 +37,9 @@ Voyant discret haut droit : vert = Twitch en ligne + émission correcte + **preu
 
 ## Fidélité historique
 Seuls extraits utilisateur directement visibles sont verbatim, les échanges anciens sont résumés et marqués non verbatim. Aucune « conversation complète » inventée ni données personnelles publiées.
+
+## Nouvel instrument de recherche côté spectateur (code expérimental)
+- `/probe/` sur le même serveur local : après clic et autorisation écran/onglet, `getDisplayMedia` fournit vidéo et éventuellement son, l'analyseur WebAudio calcule RMS/dBFS descriptif et ne sauvegarde rien. Tests purs `tests/probe-audio.test.mjs`.
+- **Aucune intégration au voyant vert** : le compteur `requestVideoFrameCallback` mesure des frames de capture d'onglet, pas la progression garantie du lecteur Twitch; un onglet peut animer son interface pendant que le stream est figé.
+- À tester sur Chrome/Edge récent avec partage audio explicitement activé. La capture peut perturber l'écoute locale; tester hors stream important et ne jamais réinjecter audio au micro/OBS.
+- Étape suivante : comparer à des statistiques du lecteur Twitch et à une sonde Chrome `tabCapture` autorisée, puis seulement envisager une confiance de lecture vidéo/audio.

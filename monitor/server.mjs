@@ -10,7 +10,10 @@ const ROOT=fileURLToPath(new URL("./",import.meta.url));
 const PAGES=Object.freeze({
   "/":["index.html","text/html; charset=utf-8"],
   "/app.mjs":["app.mjs","text/javascript; charset=utf-8"],
-  "/style.css":["style.css","text/css; charset=utf-8"]
+  "/style.css":["style.css","text/css; charset=utf-8"],
+  "/probe/":["../probe/index.html","text/html; charset=utf-8"],
+  "/probe/app.mjs":["../probe/app.mjs","text/javascript; charset=utf-8"],
+  "/probe/audio.mjs":["../src/probe/audio.mjs","text/javascript; charset=utf-8"]
 });
 function json(res,status,object){
   const data=JSON.stringify(object);

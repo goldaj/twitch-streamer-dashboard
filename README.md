@@ -54,3 +54,6 @@ Lire [ADR des signaux](docs/ADR_0001_SIGNALS.md), [plan sonde côté spectateur]
 La normalisation automatique du volume choisie par le streamer est conservée dans [issue #6](https://github.com/goldaj/twitch-streamer-dashboard/issues/6), avec cible plutôt en **LUFS** et protections true-peak. Elle n'est pas un jalon du premier voyant.
 
 Licence MIT. Aucun historique privé, token, enregistrement de stream ou donnée Twitch personnelle dans Git.
+
+## Expérience de recherche complémentaire : son dans un onglet réel
+Lorsque `npm start` est lancé, ouvre **http://127.0.0.1:8767/probe/** dans Chrome/Edge récent, puis clique `Capturer volontairement un onglet` et sélectionne l'onglet Twitch **avec partage audio**. Cette sonde fournit uniquement des métriques locales descriptives, **pas** la preuve finale d'un flux Twitch sain et **aucun** signal vert automatique. Voir `docs/VIEWER_PROBE_PLAN.md`.

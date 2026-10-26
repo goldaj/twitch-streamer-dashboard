@@ -33,3 +33,8 @@ Le client peut légitimement se demander « est-ce que quelqu'un reçoit bien mo
 - https://dev.twitch.tv/docs/embed/video-and-clips
 - https://developer.chrome.com/docs/extensions/reference/api/tabCapture
 - https://github.com/obsproject/obs-websocket/blob/master/docs/generated/protocol.md
+
+## Spike `getDisplayMedia` (2026-10-26) : ce qui est implémenté
+Page `/probe/` côté serveur local. Capture **après clic utilisateur et sélection explicite** de l'onglet Twitch via navigateur, vidéo preview visible, `AudioContext` + `AnalyserNode` (sans destination, pour éviter la boucle d'écho), résumé RMS / dBFS sur environ 8 à 30 relevés, `requestVideoFrameCallback` pour vérifier le flux de capture tab. Tout est en RAM, zéro upload/audio enregistré.
+
+**Aucune conclusion sur la santé du stream Twitch** : une source audio pourrait provenir d'autres éléments du tab; une capture vidéo tab qui avance ne garantit pas que le lecteur Twitch décode effectivement des frames. Le prototype n'envoie donc rien au moteur de santé. Il doit d'abord être essayé et confronté à des pannes contrôlées, avant son intégration future.

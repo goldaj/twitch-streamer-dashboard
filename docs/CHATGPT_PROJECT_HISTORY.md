@@ -39,3 +39,6 @@ Aucune conversation ancienne non accessible n'est inventée. Pas de secret, capt
 - Rechallenge : OBS calcule les pertes par delta de compteurs consécutifs et exige progression des frames. Premier compteur ne donne pas une mesure récente. Aucun faux succès de vert sans sonde.
 - **Pas de tests sur un vrai flux Twitch/OBS** depuis ChatGPT; seuls tests Node/CI. Aucun credential personnel consulté ou commité. La sonde viewer reste un problème de recherche à résoudre.
 - Détails et plan Codex dans `docs/HANDOFF.md`, `docs/TEST_PLAN.md`, `docs/VIEWER_PROBE_PLAN.md` et `docs/ADR_0001_SIGNALS.md`.
+
+## 2026-10-26 : instrumentation exploratoire réception audio
+**Assistant, résumé reconstruit (non verbatim)** : ajoute une page d'expérience `/probe/`, utilisant une capture volontaire de l'onglet choisi par l'utilisateur et un analyseur RMS/dBFS sans stockage. Cette expérience n'est **pas** une sonde de décodage vidéo Twitch certifiée : aucun signal n'est transmis au moteur vert, pour éviter une fausse garantie. Test automatisé de calcul audio uniquement, pas d'essai Chrome réel.

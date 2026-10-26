@@ -24,3 +24,8 @@
 
 ## Décision commerciale
 **Ne pas** annoncer « le voyant garantit que tout le monde voit et entend »; même une sonde viewer ne représente qu'un point de réseau. La valeur commerciale est une alerte indépendante de santé **observée**, avec limites connues.
+
+## S5.0, expérience instrumentée (PR #7)
+- `probe/` : sélection manuelle de l'onglet via `getDisplayMedia`, preview visible, métrique RMS/dBFS sur signal audio reçu, frames de l'onglet; aucun stockage ni transmission. **Code seulement, pas testé dans Chrome avec réel stream**.
+- Ne pas confondre les frames du **tab capturé** avec les frames **du lecteur Twitch**. Condition `viewer` du moteur reste `null`, même quand cette expérience détecte une énergie sonore.
+- Si le modèle est viable en conditions réelles, travailler une sonde plus stricte avec lecteur officiel et/ou extension Chrome consentie. Mesurer faux-positifs avant de connecter au voyant vert.
