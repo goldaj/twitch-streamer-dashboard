@@ -7,6 +7,10 @@
 ## Sources confirmées
 Documentation officielle Twitch EventSub/Helix, embedded player et contraintes taille/non-obscurcissement, OBS WebSocket 5 et options extension navigateur `tabCapture`. Voir RESEARCH.md. Une API Helix `online` **ne prouve pas que le viewer entend la musique**.
 
+## Nouvel apport produit du 2026-10-26 : vision « suite streamer »
+
+Le propriétaire a ajouté sept idées de modules à terme. Le cadrage, les parcours, les risques (dont audio casque/stream, vraie invisibilité de l'overlay, événements de subs et modération de points de chaîne) sont dans [STREAMER_SUITE_BACKLOG.md](STREAMER_SUITE_BACKLOG.md). **Ce n'est pas une instruction d'interrompre le voyant santé ni d'élargir la PR en cours.** Les hypothèses restent ouvertes et doivent être décidées après la validation de SH.
+
 ## Priorités immédiates
 1. Coder et tester le **moteur de décision** sur données simulées et un widget discret; CI Node (aucun secret).
 2. Faire constater les 4 états et événements de défauts.
