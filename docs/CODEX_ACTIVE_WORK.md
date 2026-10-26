@@ -14,6 +14,10 @@ Dernière mise à jour : 2026-10-26 (heure précise non consignée).
 - Intégrations Twitch Helix Get Streams (poll 10 secondes avec backoff 429), OBS WebSocket 5 (handshake authentifié GetStreamStatus, frames comparées sur deux échantillons), collecteur fail-closed, serveur HTTP local, surveillance armée/désarmée.
 - `/probe/` : explorateur de capture volontaire d'un onglet, niveau RMS audio; **ni preuve de décodage du player Twitch, ni preuve d'audibilité**, n'alimente pas le voyant vert.
 
+## Note de périmètre pour les reprises ultérieures
+
+La vision produit a été élargie par le propriétaire le 2026-10-26. Voir [STREAMER_SUITE_BACKLOG.md](STREAMER_SUITE_BACKLOG.md) : cockpit de lancement des outils, balance et mesure du son casque/stream, compteurs, subathon, overlay privé, Discord, automatisations Channel Points. **Tout est backlog futur ; le travail actuel des PR #1 et #7 reste prioritaire et ne doit pas être écrasé.**
+
 ## Contrat produit prioritaire
 Petit voyant streamer-only haut droit : vert **uniquement** avec preuve récente Twitch ONLINE + OBS émission saine + réception vidéo/audio contrôlée sur une vraie sonde viewer. Orange live mais panne constatée; rouge interruption involontaire confirmée; gris manque de preuve ou fin volontaire. **Le vrai voyant reste gris sans sonde viewer.** Normalisation LUFS futur ticket #6.
 
