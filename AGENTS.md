@@ -23,7 +23,7 @@ Convention source : https://github.com/goldaj/projects-incubator/blob/main/docs/
 L'archive docs/CHATGPT_PROJECT_HISTORY.md est **partielle** et doit être enrichie sans fabriquer d'anciennes conversations.
 
 ## Périmètre reporté
-Normalisation de loudness cible par streamer (LUFS plutôt que simple dB), **jamais** dans le premier jalon. Chat/analytics/gestion Twitch non prioritaires.
+Normalisation de loudness et cohérence de mix audio casque/stream (plusieurs sources), **jamais** dans le premier jalon. La vision élargie contient launcher, timers, subathon, overlay privé, Discord et actions sur récompenses de points de chaîne : lire [docs/STREAMER_SUITE_BACKLOG.md](docs/STREAMER_SUITE_BACKLOG.md). **Ne pas implémenter ces modules pendant la validation du voyant P0**, et ne pas confondre la documentation des hypothèses avec des décisions techniques actées. Les actions de modération demandent une revue Twitch/permissions et des protections contre les abus. Chat et analytics classiques restent non prioritaires.
 
 ## Reprise obligatoire
 **Avant tout changement de code, lire [docs/CODEX_ACTIVE_WORK.md](docs/CODEX_ACTIVE_WORK.md)** : ce fichier sur `develop` pointe les PR et les fichiers plus récents sur les branches en cours. Les instructions précédentes restent historiques ; il ne faut pas prendre le README de `main` pour l'état actuel.
