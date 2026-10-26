@@ -44,6 +44,8 @@ export function assess(snapshot, now, overrides={}) {
   if(obs.streaming!==true) return result(HEALTH.UNKNOWN,"État OBS indéterminé","obs");
   if(obs.framesAdvancing===false)
     return result(HEALTH.DEGRADED,"Aucune nouvelle image comptée par OBS","obs");
+  if(obs.framesAdvancing!==true)
+    return result(HEALTH.UNKNOWN,"Progression des images OBS non vérifiée","obs");
   if(Number.isFinite(obs.dropRatio) && obs.dropRatio>=cfg.maxDropRatio)
     return result(HEALTH.DEGRADED,"Pertes importantes d'images pendant l'envoi","obs");
   if(!Number.isFinite(obs.dropRatio) || obs.dropRatio<0 || obs.dropRatio>1)
