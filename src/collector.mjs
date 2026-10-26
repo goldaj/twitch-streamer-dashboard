@@ -62,7 +62,7 @@ export class HealthCollector {
     void this.refresh("obs");void this.refresh("twitch");
     this.timers=[
       setInterval(()=>void this.refresh("obs"),3_000),
-      setInterval(()=>void this.refresh("twitch"),45_000)
+      setInterval(()=>void this.refresh("twitch"),10_000)
     ];
   }
   stop(){

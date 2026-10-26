@@ -5,7 +5,7 @@
 | S0 | Cadrage voyant 4 états, contre les faux verts | **Fait** sur develop |
 | S1 | Moteur pur + UI simulateur | **PR #1 draft**, tests Node verts, aucune mesure réelle |
 | S2 | Collecte émission OBS WebSocket 5 | **PR #7 draft** : code+tests mock implémentés, **pas test OBS réel** |
-| S3 | Twitch Helix Get Streams, OAuth app token | **PR #7 draft** : code+tests mock, **pas test Twitch réel** |
+| S3 | Twitch Helix Get Streams (poll 10s, gestion 429), OAuth app token | **PR #7 draft** : code+tests mock, **pas test Twitch réel** |
 | S4 | Server local, intention streamer, sources exposées en lecture | **PR #7 draft** : code+tests HTTP, UI manuelle requise |
 | S5 | Mesure image/son côté viewer | **R&D critique**, non démarrée en code; plan VIEWER_PROBE_PLAN.md |
 | S6 | Calibration de seuils, intégration et anti faux-positifs | Non démarré |

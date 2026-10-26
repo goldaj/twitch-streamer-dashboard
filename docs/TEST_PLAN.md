@@ -21,7 +21,7 @@ CI sans frais et sans live.
 1. Créer app développeur, garder secret uniquement local, définir chaîne réelle contrôlée.
 2. Quand non-live, Helix retourne data []; aucune erreur OAuth ne doit devenir `online:false`.
 3. Live active : Helix ONLINE et `wasLive=true` lorsqu'armé, date last seen.
-4. Coupure inattendue : online -> offline, rouge après délai de confirmation; possible délai **jusqu'à 45s+**, un polling Helix ne garantit pas une alerte instantanée.
+4. Coupure inattendue : online -> offline, rouge après délai de confirmation; possible délai **jusqu'à 10s+** (dépend aussi de la propagation Twitch), un polling Helix ne garantit pas une alerte instantanée.
 5. Rate limit 429, timeout, identifiant erroné, token révoqué : gris.
 6. Horodatage de la transition; noter faux positifs/reprise.
 

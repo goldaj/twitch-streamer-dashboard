@@ -56,14 +56,14 @@ test("never continue showing green when probes disappear or red is suspected",()
   assert.equal(mon.update(snapshot({twitch:{online:false,at:T+500}}),T+500).color,HEALTH.UNKNOWN);
 });
 
-test("source-specific freshness follows Twitch 45s and OBS 3s polling",()=>{
-  const seen=T+48_000;
+test("source-specific freshness follows Twitch 10s and OBS 3s polling",()=>{
+  const seen=T+10_000;
   const s=snapshot({
     obs:{streaming:true,reconnecting:false,dropRatio:.002,framesAdvancing:true,at:seen},
     viewer:{videoPlaying:true,framesAdvancing:true,audioTrack:true,audioActive:true,at:seen}
   });
   assert.equal(assess(s,seen).color,HEALTH.HEALTHY);
-  assert.equal(assess(s,seen+91_000).color,HEALTH.UNKNOWN);
+  assert.equal(assess(s,seen+31_000).color,HEALTH.UNKNOWN);
   assert.equal(assess(snapshot({obs:{streaming:true,reconnecting:false,dropRatio:null,at:T}}),T).color,
     HEALTH.UNKNOWN);
 });

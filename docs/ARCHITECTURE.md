@@ -29,7 +29,7 @@
 On ne rend jamais `viewer` non-null tant qu'une vraie sonde n'est pas intégrée et validée. Twitch ONLINE + OBS émetteur OK = **preuve partielle seulement** et affiche gris en l'absence de défaut confirmé. Ne pas déployer un simple watcher Twitch en l'appelant « réception image et son ».
 
 ## Limites d'instrumentation
-- Helix ne prouve pas ce que reçoit un spectateur et peut avoir jusqu'à ~45s de latence de découverte plus confirmations.
+- Helix ne prouve pas ce que reçoit un spectateur et a jusqu'à ~10s de délai entre polls, **plus** propagation Twitch et confirmation. EventSub devrait améliorer la réactivité.
 - OBS n'a pas accès au retour réseau du player Twitch; volume input OBS ne prouve pas volume reçu.
 - Le premier relevé compteur OBS n'offre **aucun delta récent**; le second valide progression et pertes, et tout compteur bloqué/invalidé déclenche orange/gris.
 - Pour une première version desktop distribuable, les identifiants ne doivent pas être codés dans l'app; architecture OAuth appropriée à choisir après POC.

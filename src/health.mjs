@@ -14,7 +14,7 @@ export const HEALTH = Object.freeze({
 
 const DEFAULTS = Object.freeze({
   staleAfterMs: 15_000, // legacy override / compatibility
-  twitchStaleAfterMs: 90_000, // Helix polled every 45 seconds
+  twitchStaleAfterMs: 30_000, // Helix polled every 10 seconds
   obsStaleAfterMs: 12_000, // OBS polled every 3 seconds
   viewerStaleAfterMs: 12_000,
   redConfirmMs: 8_000,

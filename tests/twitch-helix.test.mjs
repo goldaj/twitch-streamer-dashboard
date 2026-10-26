@@ -42,3 +42,21 @@ test("HTTP 401 clears and refreshes expired/invalid token once",async()=>{
   assert.equal((await t.poll()).online,false);
   assert.equal(auth,2);
 });
+
+test("rate-limit backoff skips repeated requests until bucket reset",async()=>{
+  let time=500_000,calls=0;
+  const t=new TwitchHelix({clientId:"cid",clientSecret:"secret",channel:"channel",now:()=>time,
+    fetchFn:async(url)=>{
+      calls++;
+      if(url.includes("/oauth2/token"))return {ok:true,json:async()=>({access_token:"token",expires_in:3600})};
+      return {ok:false,status:429,headers:{get:()=>String((time+25_000)/1000)}};
+    }});
+  await assert.rejects(()=>t.poll(),TwitchError);
+  assert.equal(calls,2);
+  time+=5000;
+  await assert.rejects(()=>t.poll(),TwitchError);
+  assert.equal(calls,2);
+  time+=26000;
+  await assert.rejects(()=>t.poll(),TwitchError);
+  assert.equal(calls,3);
+});

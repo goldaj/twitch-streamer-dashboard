@@ -17,6 +17,7 @@ export class TwitchHelix {
     this.now=now;
     this.token=null;
     this.expiry=0;
+    this.backoffUntil=0;
   }
   get configured(){return !!(this.channel && this.clientId && this.clientSecret);}
   async getToken(force=false){
@@ -38,6 +39,7 @@ export class TwitchHelix {
     return this.token;
   }
   async poll(){
+    if(this.now()<this.backoffUntil)throw new TwitchError("Twitch : attente du quota.");
     let token=await this.getToken();
     for(let retry=0;retry<2;retry++){
       const url="https://api.twitch.tv/helix/streams?user_login="+encodeURIComponent(this.channel);
@@ -48,6 +50,13 @@ export class TwitchHelix {
       if(res.status===401 && retry===0){
         token=await this.getToken(true);
         continue;
+      }
+      if(res.status===429){
+        const reset=Number(res.headers?.get?.("ratelimit-reset"));
+        const until=Number.isFinite(reset) && reset>this.now()/1000
+          ? reset*1000 : this.now()+60_000;
+        this.backoffUntil=Math.min(this.now()+300_000,until);
+        throw new TwitchError("Twitch Helix : quota atteint.");
       }
       if(!res.ok)throw new TwitchError("Twitch Helix HTTP "+res.status);
       const json=await res.json();

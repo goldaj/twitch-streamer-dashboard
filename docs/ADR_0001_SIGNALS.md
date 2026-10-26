@@ -22,7 +22,7 @@ Un voyant peut être vendu s'il réduit effectivement le temps de détection des
 6. Arrêt volontaire = désarmement explicite, et non couleur rouge.
 
 ## Choix d'échantillonnage
-- Twitch : polling Helix 45 s, preuve conservée au plus 90 s. EventSub sera complément, pas obligatoire pour v0.
+- Twitch : polling Helix 10 s pour réduire le temps de détection, preuve conservée au plus 30 s. Backoff après HTTP 429; EventSub serait complémentaire et nécessaire pour réduire davantage le délai. EventSub sera complément, pas obligatoire pour v0.
 - OBS : polling 3 s, fenêtre TTL 12 s. `outputSkippedFrames / outputTotalFrames` sont des compteurs depuis le début du stream : **différentiel** sur deux relevés uniquement, sinon gris initial. L'absence de progression de frames donne orange si OBS actif et Twitch online.
 - Viewer : TTL 12 s à définir et valider avec vrai instrument de mesure. Silence volontaire important : le signal audio `audioActive` requiert configuration `soundExpected` et fenêtre temporelle.
 - Confirmation couleurs proposées : rouge 8 s, orange 2 s, retour vert 3 s. Ce ne sont **pas** des limites démontrées.

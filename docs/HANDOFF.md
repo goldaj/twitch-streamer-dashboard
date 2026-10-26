@@ -15,15 +15,15 @@ Voyant discret haut droit : vert = Twitch en ligne + émission correcte + **preu
 ## Source / interfaces
 - `src/obs-websocket.mjs` : OBS protocol v5 authentication, GetStreamStatus read-only; échantillons différentiels de frames (le premier ne suffit pas); possible statut `framesAdvancing` false si compteur bloqué.
 - `src/twitch-helix.mjs` : client_credentials OAuth token côté serveur et GET `/helix/streams?user_login=`, 401 réessayé, 429 => erreur.
-- `src/collector.mjs` : polling indépendant OBS 3s, Twitch 45s, source perdue => null et état inconnu, trace `wasLive` seulement après Twitch ONLINE armé.
+- `src/collector.mjs` : polling indépendant OBS 3s, Twitch 10s (backoff quota), source perdue => null et état inconnu, trace `wasLive` seulement après Twitch ONLINE armé.
 - `monitor/server.mjs` + `monitor/` : UI de mesures locales, `/api/status` et `/api/intent`; ne sert **aucune** clé ou donnée personnelle de compte, ne capture ni images ni audio.
-- `src/health.mjs` : preuve Twitch fraîche 90s, OBS 12s, viewer 12s; rétablissement du vert uniquement si `framesAdvancing:true`, `dropRatio` présent et trois sources complètes.
+- `src/health.mjs` : preuve Twitch fraîche 30s, OBS 12s, viewer 12s; rétablissement du vert uniquement si `framesAdvancing:true`, `dropRatio` présent et trois sources complètes.
 
 ## Garde-fous et défauts connus
 - Sans viewer probe, le vrai voyant ne peut **pas** devenir vert, par conception. La page `web/` demeure simulation; `monitor/` est réelle quand les sources sont configurées.
 - **Aucune connexion réelle à OBS ou Twitch n'a été exécutée par ChatGPT**, seuls tests Node avec faux fournisseurs. Ne pas considérer API de production éprouvée.
 - La mesure de niveau sonore OBS et la validation audio côté réception restent **à développer** (issue #4). Ne pas inférer le son viewer depuis un compteur d'images.
-- Polling Twitch 45s donne alerte après délai variable; EventSub permettrait accélération, mais doit se confirmer sur réseau / compte de test.
+- Polling Twitch 10s donne alerte après délai variable; EventSub permettrait accélération, mais doit se confirmer sur réseau / compte de test.
 - Rester prudent avec false reds lors de fermeture/réouverture de session et environnements multistreams.
 - Mode distributeur commercial : éviter d'embarquer `TWITCH_CLIENT_SECRET` dans un binaire desktop, lire `docs/SECURITY.md`.
 - Branches liées : ne pas fusionner PR #7 vers la base pendant que Codex modifie PR #1; faire revue et résolution explicite des conflits avant fusion.
