@@ -43,6 +43,8 @@ function render(){
 }
 document.querySelectorAll("[data-scenario]").forEach(b=>b.addEventListener("click",()=>{
   scenario=b.dataset.scenario;
+  // The unexpected-outage scenario assumes the broadcast was previously live.
+  if (scenario==="offline") everLive=true;
   seenAt=Date.now();
   document.querySelectorAll("[data-scenario]").forEach(x=>x.classList.toggle("selected",x===b));
   render();
