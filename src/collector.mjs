@@ -52,7 +52,7 @@ export class HealthCollector {
         twitch:this.snapshot.twitch?{online:this.snapshot.twitch.online,at:this.snapshot.twitch.at}:null,
         obs:this.snapshot.obs?{streaming:this.snapshot.obs.streaming,
           reconnecting:this.snapshot.obs.reconnecting,dropRatio:this.snapshot.obs.dropRatio,
-          at:this.snapshot.obs.at}:null,
+          framesAdvancing:this.snapshot.obs.framesAdvancing,at:this.snapshot.obs.at}:null,
         viewer:null
       },errors:{...this.errors},completeViewerCheck:false};
   }

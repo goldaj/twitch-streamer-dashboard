@@ -10,13 +10,16 @@ test("OBS v5 auth challenge: two SHA256 base64 passes",()=>{
 test("dropped frames use delta counters, not lifetime ratio",()=>{
   const old=obsFrameMetrics({outputActive:true,outputReconnecting:false,
     outputTotalFrames:1000,outputSkippedFrames:100});
-  assert.equal(old.dropRatio,.1);
+  assert.equal(old.dropRatio,null);
+  assert.equal(old.framesAdvancing,null);
   const next=obsFrameMetrics({outputActive:true,outputReconnecting:false,
     outputTotalFrames:1100,outputSkippedFrames:103},old.counters);
   assert.ok(Math.abs(next.dropRatio-.03)<1e-10);
+  assert.equal(next.framesAdvancing,true);
   const stagnant=obsFrameMetrics({outputActive:true,outputReconnecting:false,
     outputTotalFrames:1100,outputSkippedFrames:103},next.counters);
   assert.equal(stagnant.dropRatio,null);
+  assert.equal(stagnant.framesAdvancing,false);
   assert.throws(()=>obsFrameMetrics({outputActive:"yes",outputReconnecting:false}));
 });
 test("non-loopback OBS URLs are prohibited",()=>{
@@ -55,7 +58,8 @@ test("authenticates and polls OBS over a mocked real RPC handshake",async()=>{
   const obs=new ObsWebSocket({password:"secret",WebSocketImpl:FakeWs,now:()=>1234});
   const signal=await obs.poll();
   assert.equal(signal.streaming,true);
-  assert.equal(signal.dropRatio,.02);
+  assert.equal(signal.dropRatio,null);
+  assert.equal(signal.framesAdvancing,null);
   assert.equal(signal.at,1234);
   obs.close();
 });

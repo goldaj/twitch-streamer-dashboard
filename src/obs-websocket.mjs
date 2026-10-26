@@ -9,15 +9,17 @@ export function obsFrameMetrics(current,previous=null){
   if(typeof current?.outputActive!=="boolean" || typeof current?.outputReconnecting!=="boolean")
     throw new Error("OBS GetStreamStatus incomplet.");
   const dropped=current.outputSkippedFrames,total=current.outputTotalFrames;
-  let ratio=null;
+  let ratio=null,framesAdvancing=null;
   if(Number.isInteger(dropped)&&Number.isInteger(total)&&dropped>=0&&total>=0 && dropped<=total){
     if(previous && total>=previous.total && dropped>=previous.dropped){
       const dTotal=total-previous.total,dDropped=dropped-previous.dropped;
+      framesAdvancing=dTotal>0;
       if(dTotal>0)ratio=dDropped/dTotal;
-    } else if(total>0)ratio=dropped/total; // first sample, cumulative approximation
+    }
+    // First sample and reset cannot prove current health: do NOT use lifetime ratio.
   }
   return {streaming:current.outputActive,reconnecting:current.outputReconnecting,
-    dropRatio:ratio,
+    dropRatio:ratio,framesAdvancing,
     counters:Number.isInteger(total)&&Number.isInteger(dropped)&&total>=dropped&&dropped>=0?
       {total,dropped}:null};
 }
@@ -118,7 +120,7 @@ export class ObsWebSocket {
     const metrics=obsFrameMetrics(data,this.previous);
     this.previous=metrics.counters;
     return {streaming:metrics.streaming,reconnecting:metrics.reconnecting,
-      dropRatio:metrics.dropRatio,at:this.now()};
+      dropRatio:metrics.dropRatio,framesAdvancing:metrics.framesAdvancing,at:this.now()};
   }
   close(){
     this.ready=false;
