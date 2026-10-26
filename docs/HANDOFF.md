@@ -18,3 +18,10 @@ Branche `develop` documents, branche `feat/health-indicator-mvp` code, PR **draf
 
 ## Risques à conserver
 Mesure réelle du **son reçu** difficile; musique/capture autorisée seulement; silence volontaire ≠ panne, image statique volontaire ≠ freeze; lecteur Twitch embedded soumis contraintes, aucune sonde « invisible » artificielle. Ne jamais enregistrer ou publier du contenu audiovisuel réel sans autorisation.
+
+## GitHub : travail du 2026-10-26 vérifié
+- [PR #1](https://github.com/goldaj/twitch-streamer-dashboard/pull/1) : branche `feat/health-indicator-mvp`, démonstration de voyant et moteur de décision sur observations **fictives**, brouillon non fusionné.
+- [CI de PR 40365427678](https://github.com/goldaj/twitch-streamer-dashboard/actions/runs/40365427678) et [CI push 40365363798](https://github.com/goldaj/twitch-streamer-dashboard/actions/runs/40365363798) : **success** Node tests + syntaxe, pas d'API réelle.
+- [#2 OBS WebSocket](https://github.com/goldaj/twitch-streamer-dashboard/issues/2), [#3 Twitch Helix/EventSub](https://github.com/goldaj/twitch-streamer-dashboard/issues/3), [#4 sonde viewer](https://github.com/goldaj/twitch-streamer-dashboard/issues/4), [#5 packaging streamer-only](https://github.com/goldaj/twitch-streamer-dashboard/issues/5), [#6 normalisation audio future](https://github.com/goldaj/twitch-streamer-dashboard/issues/6).
+- [PR #3 de l'incubateur](https://github.com/goldaj/projects-incubator/pull/3) prépare le retrait de l'idée, brouillon non fusionné.
+- **Priorité R&D** : validation de « son et image arrivés côté viewer ». Ne surtout pas promettre un vert crédible via Twitch Online + OBS seuls.
