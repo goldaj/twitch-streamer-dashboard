@@ -41,10 +41,10 @@ test("after red confirmation, returning signal must be verified before green",()
   assert.equal(mon.update(down,T).color,HEALTH.UNKNOWN);
   assert.equal(mon.update({...down,twitch:{online:false,at:T+7_500}},T+7_500).color,HEALTH.UNKNOWN);
   assert.equal(mon.update({...down,twitch:{online:false,at:T+8_010}},T+8_010).color,HEALTH.INTERRUPTED);
-  const back=snapshot({twitch:{online:true,at:T+8_100},obs:{streaming:true,at:T+8_100},
+  const back=snapshot({twitch:{online:true,at:T+8_100},obs:{streaming:true,reconnecting:false,dropRatio:0,at:T+8_100},
     viewer:{videoPlaying:true,framesAdvancing:true,audioTrack:true,audioActive:true,at:T+8_100}});
   assert.equal(mon.update(back,T+8_100).color,HEALTH.UNKNOWN);
-  const ready=snapshot({twitch:{online:true,at:T+11_200},obs:{streaming:true,at:T+11_200},
+  const ready=snapshot({twitch:{online:true,at:T+11_200},obs:{streaming:true,reconnecting:false,dropRatio:0,at:T+11_200},
     viewer:{videoPlaying:true,framesAdvancing:true,audioTrack:true,audioActive:true,at:T+11_200}});
   assert.equal(mon.update(ready,T+11_200).color,HEALTH.HEALTHY);
 });
