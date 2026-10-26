@@ -1,27 +1,39 @@
-# Passation pour Codex — projet Twitch health light
+# Passation Codex — Twitch Stream Health Indicator
 
-2026-10-26 : dépôt public `goldaj/twitch-streamer-dashboard` créé par le propriétaire. L'idée incubateur était trop sommaire : « interface de supervision de stream, chat et analytics », avec attente de retrouver les maquettes.
+Dernier cadrage : 2026-10-26, conversation « Avancement_projets_codex_6 ».
 
-**Précision produit actuelle (qui prime)** : un petit témoin de santé, discret et visible en haut à droite pour le streamer, vert si **Twitch live + image réellement décodée côté spectateur + son qui arrive**, orange si Twitch encore live mais panne image/son/émission, rouge si coupure involontaire, gris si inconnu/avant live. La normalisation automatique du volume (réglage par streamer) est explicitement différée.
+## Contrat produit
+Voyant discret haut droit : vert = Twitch en ligne + émission correcte + **preuve vidéo/audio depuis une lecture spectateur**; orange = stream online mais défaillance confirmée; rouge = coupure non volontaire après délai; gris = doute/avant live/fin volontaire. Réglage automatique de volume LUFS reporté.
 
-## Sources confirmées
-Documentation officielle Twitch EventSub/Helix, embedded player et contraintes taille/non-obscurcissement, OBS WebSocket 5 et options extension navigateur `tabCapture`. Voir RESEARCH.md. Une API Helix `online` **ne prouve pas que le viewer entend la musique**.
+## Travaux GitHub
+- Base de cadrage `develop`.
+- [PR #1](https://github.com/goldaj/twitch-streamer-dashboard/pull/1) `feat/health-indicator-mvp` : widget fictif et moteur.
+- [PR #7](https://github.com/goldaj/twitch-streamer-dashboard/pull/7) `feat/obs-twitch-telemetry` basée sur la branche de PR #1 : collecteurs réels **codés**, sans essai réel avec Twitch ou OBS.
+- [Incubateur PR #3](https://github.com/goldaj/projects-incubator/pull/3) a été **fusionnée sur main** (SHA `2bed7a59915aebb51a64672631a5c5b19f2d8e8d`). L'ancienne fiche Twitch et son lien d'index ont été vérifiés absents.
+- Tickets : [#2 OBS](https://github.com/goldaj/twitch-streamer-dashboard/issues/2), [#3 Twitch](https://github.com/goldaj/twitch-streamer-dashboard/issues/3), [#4 sonde viewer](https://github.com/goldaj/twitch-streamer-dashboard/issues/4), [#5 package Windows](https://github.com/goldaj/twitch-streamer-dashboard/issues/5), [#6 normalisation audio](https://github.com/goldaj/twitch-streamer-dashboard/issues/6).
 
-## Priorités immédiates
-1. Coder et tester le **moteur de décision** sur données simulées et un widget discret; CI Node (aucun secret).
-2. Faire constater les 4 états et événements de défauts.
-3. Connecter OBS, Twitch puis une sonde spectateur à autorisations explicites.
-4. Mesurer false positives/délais. Un seul viewer probe n'est pas preuve universelle.
+## Source / interfaces
+- `src/obs-websocket.mjs` : OBS protocol v5 authentication, GetStreamStatus read-only; échantillons différentiels de frames (le premier ne suffit pas); possible statut `framesAdvancing` false si compteur bloqué.
+- `src/twitch-helix.mjs` : client_credentials OAuth token côté serveur et GET `/helix/streams?user_login=`, 401 réessayé, 429 => erreur.
+- `src/collector.mjs` : polling indépendant OBS 3s, Twitch 45s, source perdue => null et état inconnu, trace `wasLive` seulement après Twitch ONLINE armé.
+- `monitor/server.mjs` + `monitor/` : UI de mesures locales, `/api/status` et `/api/intent`; ne sert **aucune** clé ou donnée personnelle de compte, ne capture ni images ni audio.
+- `src/health.mjs` : preuve Twitch fraîche 90s, OBS 12s, viewer 12s; rétablissement du vert uniquement si `framesAdvancing:true`, `dropRatio` présent et trois sources complètes.
 
-## Conventions
-Branche `develop` documents, branche `feat/health-indicator-mvp` code, PR **draft**. Ne pas fusionner ni toucher au dépôt `twitch-pokemon-chat-bot` qui est indépendant. Voir AGENTS.md et CHATGPT_PROJECT_HISTORY.md.
+## Garde-fous et défauts connus
+- Sans viewer probe, le vrai voyant ne peut **pas** devenir vert, par conception. La page `web/` demeure simulation; `monitor/` est réelle quand les sources sont configurées.
+- **Aucune connexion réelle à OBS ou Twitch n'a été exécutée par ChatGPT**, seuls tests Node avec faux fournisseurs. Ne pas considérer API de production éprouvée.
+- La mesure de niveau sonore OBS et la validation audio côté réception restent **à développer** (issue #4). Ne pas inférer le son viewer depuis un compteur d'images.
+- Polling Twitch 45s donne alerte après délai variable; EventSub permettrait accélération, mais doit se confirmer sur réseau / compte de test.
+- Rester prudent avec false reds lors de fermeture/réouverture de session et environnements multistreams.
+- Mode distributeur commercial : éviter d'embarquer `TWITCH_CLIENT_SECRET` dans un binaire desktop, lire `docs/SECURITY.md`.
+- Branches liées : ne pas fusionner PR #7 vers la base pendant que Codex modifie PR #1; faire revue et résolution explicite des conflits avant fusion.
 
-## Risques à conserver
-Mesure réelle du **son reçu** difficile; musique/capture autorisée seulement; silence volontaire ≠ panne, image statique volontaire ≠ freeze; lecteur Twitch embedded soumis contraintes, aucune sonde « invisible » artificielle. Ne jamais enregistrer ou publier du contenu audiovisuel réel sans autorisation.
+## À faire à la reprise
+1. Lire `AGENTS.md`, `docs/ADR_0001_SIGNALS.md`, `docs/VIEWER_PROBE_PLAN.md`, `docs/TASKS.md`, `docs/TEST_PLAN.md`, puis historique.
+2. Vérifier CI de la tête de PR #7; regarder échecs/test flakiness et corriger.
+3. Faire essais OBS et Twitch réels sur machine de test, consigner les mesures sans secrets.
+4. Prototyper sonde viewer consentie. **C'est le vrai point de recherche / go-no-go commercial.**
+5. À chaque commit, mettre à jour TÂCHES/HANDOFF/HISTORIQUE et vérifier les URLs.
 
-## GitHub : travail du 2026-10-26 vérifié
-- [PR #1](https://github.com/goldaj/twitch-streamer-dashboard/pull/1) : branche `feat/health-indicator-mvp`, démonstration de voyant et moteur de décision sur observations **fictives**, brouillon non fusionné.
-- [CI de PR 40365427678](https://github.com/goldaj/twitch-streamer-dashboard/actions/runs/40365427678) et [CI push 40365363798](https://github.com/goldaj/twitch-streamer-dashboard/actions/runs/40365363798) : **success** Node tests + syntaxe, pas d'API réelle.
-- [#2 OBS WebSocket](https://github.com/goldaj/twitch-streamer-dashboard/issues/2), [#3 Twitch Helix/EventSub](https://github.com/goldaj/twitch-streamer-dashboard/issues/3), [#4 sonde viewer](https://github.com/goldaj/twitch-streamer-dashboard/issues/4), [#5 packaging streamer-only](https://github.com/goldaj/twitch-streamer-dashboard/issues/5), [#6 normalisation audio future](https://github.com/goldaj/twitch-streamer-dashboard/issues/6).
-- [PR #3 de l'incubateur](https://github.com/goldaj/projects-incubator/pull/3) prépare le retrait de l'idée, brouillon non fusionné.
-- **Priorité R&D** : validation de « son et image arrivés côté viewer ». Ne surtout pas promettre un vert crédible via Twitch Online + OBS seuls.
+## Fidélité historique
+Seuls extraits utilisateur directement visibles sont verbatim, les échanges anciens sont résumés et marqués non verbatim. Aucune « conversation complète » inventée ni données personnelles publiées.

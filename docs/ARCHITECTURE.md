@@ -1,28 +1,35 @@
-# Architecture projetée — MVP puis sources réelles
+# Architecture du Stream Health
 
 ```text
- OBS WebSocket (état émission, pertes, audio local) ─┐
-                                                    │
- Twitch Helix/EventSub (live/offline) ───────────────┤
-                                                    ├─> Observation normalisée avec horodatages
- Sonde viewer (décodage vidéo + audio) ─────────────┘           │
-                                                               ▼
-                                                 Moteur santé / hystérésis
-                                                               │
-                                                               ▼
-                                                 Voyant discret + explication
+          Twitch Helix / EventSub                  OBS WebSocket v5
+             ONLINE / OFFLINE               émission / reconnexion / compteurs
+                       \                          /
+                        \                        /
+                         -> Collecteur de signaux <- (viewer probe à construire)
+                                     |
+                           décisions + hystérésis
+                                     |
+               serveur HTTP uniquement local 127.0.0.1:8767
+                    /api/status      /api/intent
+                                     |
+                             widget / fenêtre Windows future
 ```
 
-## Code initial prévu / à tester
-- `src/health.mjs` : moteur pur (aucun secret ou réseau), transition état / raisons + fraîcheur des observations.
-- `web/` : maquette fonctionnelle avec scénarios de tests (pas de vraie API).
-- `tests/` : simulation d'incidents, silence volontaire, offline attendu et reconnexion.
-- `docs/TEST_PLAN.md` : tests réels et garde-fous avant affichage vert en production.
+## Fichiers réellement implémentés
+- `src/health.mjs` : fonctions décision/hystérésis, sans requête externe.
+- `src/twitch-helix.mjs` : Helix app token, polling sans scopes privés, rafraîchissement.
+- `src/obs-websocket.mjs` : handshake RPC v5 avec challenge, GetStreamStatus read-only, ratios sur delta de compteurs.
+- `src/collector.mjs` : orchestration TTL / événements de disponibilité / volonté de live.
+- `monitor/server.mjs` : HTTP local et contrôles d'intention; **pas** de base de données ou de serveur cloud.
+- `monitor/index.html`, `monitor/app.mjs` : mini UI de surveillance réelle, **pas** encore overlay Windows toujours visible.
+- `web/` : version de simulation du voyant seul pour tester les couleurs.
+- `tests/` : mocks d'API + protocole et transactions HTTP locales.
 
-## Contrats
-Signaux : `armed`, `expectedLive`, `wasLive`, `twitch:{online,at}`, `obs:{streaming,reconnecting,dropRatio,at}`, `viewer:{videoPlaying,framesAdvancing,audioTrack,audioActive,at}`.
-Ces sources évoluent indépendamment; TTL et décisions « inconnu » sont obligatoires. `audioActive` doit être issu d'une fenêtre temporelle et d'une condition « son attendu », non d'un échantillon isolé.
-De préférence, l'indicateur ne sera **visible que par le streamer** (fenêtre always-on-top à développer) ; l'intégration OBS Browser Source afficherait aussi le voyant aux viewers si incluse dans la scène.
+## Règle fondamentale
+On ne rend jamais `viewer` non-null tant qu'une vraie sonde n'est pas intégrée et validée. Twitch ONLINE + OBS émetteur OK = **preuve partielle seulement** et affiche gris en l'absence de défaut confirmé. Ne pas déployer un simple watcher Twitch en l'appelant « réception image et son ».
 
-## Anti-portée
-Le code 2026-10-26 ne doit pas déjà être décrit comme une intégration Twitch active. Les API externes ne sont pas implémentées tant que tests et preuve de source ne sont pas présents. Aucun secret client dans une page web publique.
+## Limites d'instrumentation
+- Helix ne prouve pas ce que reçoit un spectateur et peut avoir jusqu'à ~45s de latence de découverte plus confirmations.
+- OBS n'a pas accès au retour réseau du player Twitch; volume input OBS ne prouve pas volume reçu.
+- Le premier relevé compteur OBS n'offre **aucun delta récent**; le second valide progression et pertes, et tout compteur bloqué/invalidé déclenche orange/gris.
+- Pour une première version desktop distribuable, les identifiants ne doivent pas être codés dans l'app; architecture OAuth appropriée à choisir après POC.

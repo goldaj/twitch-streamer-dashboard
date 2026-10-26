@@ -1,20 +1,26 @@
-# Backlog voyant Stream Health — 2026-10-26
+# Backlog et avancement 2026-10-26
 
-| Phase | Travail | État |
+| Étape | But | État et preuve |
 |---|---|---|
-| S0 | Vision vert/orange/rouge/gris, sources et garde-fous | **Cadré** sur develop |
-| S1 | Moteur pur d'états horodatés, confirmation et tests | **Code sur PR draft**, CI à lire, pas d'API réelle |
-| S2 | Voyant discret haut droit, causes, simulation incidents | **Code sur PR draft**, navigateur réel non testé |
-| S3 | Connecteur OBS WebSocket 5 | À faire, capturer émission et niveau audio |
-| S4 | Connecteur Twitch Helix/EventSub | À faire, respecter quotas/auth |
-| S5 | Sonde réelle côté spectateur (audio+vidéo) | Recherche critique, pas de player caché |
-| S6 | Calibration en vrais streams et robustesse | À faire, éliminer faux positifs |
-| S7 | Widget toujours au premier plan streamer + packaging Windows | À faire |
-| S8 | Publication produit | À faire après vraie preuve |
+| S0 | Cadrage voyant 4 états, contre les faux verts | **Fait** sur develop |
+| S1 | Moteur pur + UI simulateur | **PR #1 draft**, tests Node verts, aucune mesure réelle |
+| S2 | Collecte émission OBS WebSocket 5 | **PR #7 draft** : code+tests mock implémentés, **pas test OBS réel** |
+| S3 | Twitch Helix Get Streams, OAuth app token | **PR #7 draft** : code+tests mock, **pas test Twitch réel** |
+| S4 | Server local, intention streamer, sources exposées en lecture | **PR #7 draft** : code+tests HTTP, UI manuelle requise |
+| S5 | Mesure image/son côté viewer | **R&D critique**, non démarrée en code; plan VIEWER_PROBE_PLAN.md |
+| S6 | Calibration de seuils, intégration et anti faux-positifs | Non démarré |
+| S7 | Overlay streamer seul always-on-top / Windows | Non démarré |
+| S8 | UX commerciale et déploiement sécurisé | Non démarré |
+| F1 | Normalisation du volume cible LUFS | Backlog futur, issue #6, pas en MVP |
 
-## Prochaines sous-étapes
-1. Vérifier CI sur PR `feat/health-indicator-mvp`, `npm test` puis démarrer `python -m http.server 8000` pour `/web/`.
-2. Vérifier les états simulés : orange audio/video/reconnexion, rouge après délai si coupure inattendue, gris si télémétrie absente/fin volontaire, vert seulement si preuves simulées complètes.
-3. Construire le connecteur **OBS** puis Twitch; enregistrer limites « émetteur vs réception ».
-4. Prototyper sonde viewer **consentie**, avec preuve média décodé, pas compteur d'OBS.
-5. Mesurer taux de fausses alertes et latence; seulement alors remplacer la démo.
+## Prochaines sous-étapes (ordre recommandé)
+- S2.1 : examen/validation PR #7 + CI à jour, `npm test`.
+- S2.2 : réaliser une vraie connexion OBS 5 read-only et noter versions, latence, ratios, reconnections.
+- S3.1 : réaliser une vraie consultation Twitch Helix (avec clé de test **hors Git**).
+- S3.2 : simuler sur un vrai stream armé un changement online/offline non prévu, mesurer délai Helix et comparer EventSub.
+- S5.1 : expérience manuelle de capture Twitch en onglet avec permission, observer PCM/audio et vidéo côté lecture.
+- S5.2 : définir signal de qualité et transport sécurisé des seules métriques viewer -> moteur.
+- S6.1 : calibrer couleurs, timing, faux positifs; ensuite seulement emballer un widget Windows.
+
+## Décision commerciale
+**Ne pas** annoncer « le voyant garantit que tout le monde voit et entend »; même une sonde viewer ne représente qu'un point de réseau. La valeur commerciale est une alerte indépendante de santé **observée**, avec limites connues.

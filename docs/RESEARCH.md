@@ -18,3 +18,12 @@
 
 ## Contraintes produits/monétisation
 Twitch Developer Agreement, limites API, OAuth, vie privée, autorisations audio, comportement du player officiel, conditions d'usage à vérifier avant publication d'un service. Ne pas distribuer un bot créant de fausses vues ou un player invisible.
+
+## Deuxième passe de recherche (2026-10-26)
+- [OAuth Twitch client credentials](https://dev.twitch.tv/docs/authentication/getting-tokens-oauth) : app token obtenu côté serveur, valable pour données publiques. Celui-ci **n'est pas un mode d'auth pour app vendue avec un secret en dur dans l'exécutable**.
+- [Helix Get Streams](https://dev.twitch.tv/docs/api/reference#get-streams) : une liste vide d'une chaîne correctement interrogée prouve que Twitch ne la déclare pas live au moment du poll; erreur 429, 401 ou serveur indisponible **ne doit jamais** être interprétée comme offline.
+- [OBS protocole v5](https://github.com/obsproject/obs-websocket/blob/master/docs/generated/protocol.md) : requêtes `GetStreamStatus`, `outputActive`, `outputReconnecting`, `outputTotalFrames`, `outputSkippedFrames`, authentification Hello/Identify/Identified. **Différencier compteurs cumulés des variations de la dernière fenêtre**.
+- [Twitch embed](https://dev.twitch.tv/docs/embed/video-and-clips) : lecteur minimum 400x300. Une UI d'indicateur streamer de 30 pixels **ne peut pas contenir légalement un mini player Twitch caché**.
+- [Chrome tabCapture](https://developer.chrome.com/docs/extensions/reference/api/tabCapture) : user gesture nécessaire, l'audio capturé doit être routé via AudioContext si on veut continuer à l'entendre. Ce n'est pas un collecteur de données universel : seulement sur onglet autorisé.
+
+**Inconnue principale** : une mesure audio tabCapture fiable avec publicité Twitch, silence légitime et stream muté. La conception doit rester falsifiable avant commercialisation. Voir VIEWER_PROBE_PLAN.md.

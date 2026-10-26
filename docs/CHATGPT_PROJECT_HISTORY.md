@@ -23,3 +23,19 @@ Aucune conversation ancienne non accessible n'est inventée. Pas de secret, capt
 - Commit de cadrage sur develop et PR #1 avec moteur + simulation 4 états. Actions 40365427678 et 40365363798 terminées success (simulations).
 - Tickets #2 OBS, #3 Twitch, #4 vraie sonde viewer, #5 packaging, #6 normalisation du niveau audio (hors MVP).
 - Incubateur : PR #3 non fusionnée. Aucun nouveau secret, photo ou donnée de stream réel stocké.
+
+## 2026-10-26 — Audit, lancement connecteurs et nettoyage incubateur
+
+**Utilisateur (verbatim, message courant) :**
+> vas-y, go. On se lance ! Réfléchis bien avant, documente tout, assure toi que Codex pourra reprendre le travail plus tard. Bref, fait ce que tu sais faire le mieux à force de simuler un chercheur, et part ensuite le code en tant qu'ingénieur une fois que t'es confiant ! Ah et dans le repo incubator, ce projet ne doit plus apparaître du coup, vu qu'il son propre repo maintenant.
+>
+> Bon j'envoie ce message un peu tard, t'as peut être déjà tout fait, mais rechallenge le et refait une passe dessus juste pour être sûr.
+>
+> Et ensuite tu peux aller plus loin et continuer sur la suite :)
+
+**Assistant (résumé reconstitué, non verbatim) :** a réévalué le produit, identifié les risques de faux verts et fausses coupures, et décidé d'instrumenter réellement Twitch et OBS avant le volet expérimental viewer. A **fusionné** la PR #3 de l'incubateur pour supprimer effectivement la fiche devenue projet autonome (commit `2bed7a59915aebb51a64672631a5c5b19f2d8e8d`). Le fichier a été vérifié absent de main.
+- PR #7 `feat/obs-twitch-telemetry` basée sur PR #1 pour ne pas écraser ses travaux; Twitch Helix OAuth client credentials (server only), OBS WebSocket 5 authentifié, collecteur/serveur HTTP local, widget d'état partiel et tests mocked.
+- Première CI a signalé un test historique incomplet suite au durcissement des preuves. Les tests ont été corrigés pour demander une mesure valide de pertes d'images.
+- Rechallenge : OBS calcule les pertes par delta de compteurs consécutifs et exige progression des frames. Premier compteur ne donne pas une mesure récente. Aucun faux succès de vert sans sonde.
+- **Pas de tests sur un vrai flux Twitch/OBS** depuis ChatGPT; seuls tests Node/CI. Aucun credential personnel consulté ou commité. La sonde viewer reste un problème de recherche à résoudre.
+- Détails et plan Codex dans `docs/HANDOFF.md`, `docs/TEST_PLAN.md`, `docs/VIEWER_PROBE_PLAN.md` et `docs/ADR_0001_SIGNALS.md`.
