@@ -32,3 +32,6 @@ Normalisation de loudness cible par streamer (LUFS plutôt que simple dB), **jam
 - Si la sonde spectateur n'est pas disponible, conserver `viewer:null`, afficher état gris ou panne orange/rouge dûment confirmée; ne jamais simuler des mesures derrière l'interface réelle.
 - Priorité suivante : validation vraie connexion et R&D du contrôle côté spectateur. Lire `docs/VIEWER_PROBE_PLAN.md`, `docs/SECURITY.md`, `docs/ADR_0001_SIGNALS.md`.
 - La fiche Twitch a été retirée de `projects-incubator/main` par fusion de sa PR #3, SHA `2bed7a59915aebb51a64672631a5c5b19f2d8e8d`. Ne pas remettre l'idée à l'incubateur.
+
+## Latest coordination
+Lire aussi `docs/CODEX_ACTIVE_WORK.md` pour les commits, statuts et issues actifs. Ce fichier a été ajouté sur `develop` avant la passation à Codex.
