@@ -13,7 +13,10 @@ export const HEALTH = Object.freeze({
 });
 
 const DEFAULTS = Object.freeze({
-  staleAfterMs: 15_000,
+  staleAfterMs: 15_000, // legacy override / compatibility
+  twitchStaleAfterMs: 90_000, // Helix polled every 45 seconds
+  obsStaleAfterMs: 12_000, // OBS polled every 3 seconds
+  viewerStaleAfterMs: 12_000,
   redConfirmMs: 8_000,
   degradeConfirmMs: 2_000,
   recoverConfirmMs: 3_000,
@@ -27,21 +30,23 @@ export function assess(snapshot, now, overrides={}) {
   if(!snapshot?.armed) return result(HEALTH.UNKNOWN,"Surveillance non armée","configuration");
   if(!snapshot.expectedLive) return result(HEALTH.UNKNOWN,"Stream volontairement arrêté ou pas encore lancé","configuration");
   const twitch=snapshot.twitch, obs=snapshot.obs,viewer=snapshot.viewer;
-  const fresh=(signal)=>signal && Number.isFinite(signal.at) &&
-    signal.at<=now && now-signal.at<=cfg.staleAfterMs;
-  if(!fresh(twitch)) return result(HEALTH.UNKNOWN,"Statut Twitch absent ou périmé","twitch");
+  const fresh=(signal,maxAge)=>signal && Number.isFinite(signal.at) &&
+    signal.at<=now && now-signal.at<=maxAge;
+  if(!fresh(twitch,cfg.twitchStaleAfterMs)) return result(HEALTH.UNKNOWN,"Statut Twitch absent ou périmé","twitch");
   if(twitch.online===false) {
     if(snapshot.wasLive) return result(HEALTH.INTERRUPTED,"Stream Twitch hors ligne alors qu'il devait continuer","twitch");
     return result(HEALTH.UNKNOWN,"Twitch est hors ligne, démarrage encore non confirmé","twitch");
   }
   if(twitch.online!==true) return result(HEALTH.UNKNOWN,"Statut Twitch inconnu","twitch");
-  if(!fresh(obs)) return result(HEALTH.UNKNOWN,"État de l'encodeur absent ou périmé","obs");
+  if(!fresh(obs,cfg.obsStaleAfterMs)) return result(HEALTH.UNKNOWN,"État de l'encodeur absent ou périmé","obs");
   if(obs.streaming===false || obs.reconnecting===true)
     return result(HEALTH.DEGRADED,"Émission OBS arrêtée ou en reconnexion, mais Twitch encore live","obs");
   if(obs.streaming!==true) return result(HEALTH.UNKNOWN,"État OBS indéterminé","obs");
   if(Number.isFinite(obs.dropRatio) && obs.dropRatio>=cfg.maxDropRatio)
     return result(HEALTH.DEGRADED,"Pertes importantes d'images pendant l'envoi","obs");
-  if(!fresh(viewer)) return result(HEALTH.UNKNOWN,"Aucune sonde de lecture spectateur récente","viewer");
+  if(!Number.isFinite(obs.dropRatio) || obs.dropRatio<0 || obs.dropRatio>1)
+    return result(HEALTH.UNKNOWN,"Métriques de pertes OBS pas encore disponibles","obs");
+  if(!fresh(viewer,cfg.viewerStaleAfterMs)) return result(HEALTH.UNKNOWN,"Aucune sonde de lecture spectateur récente","viewer");
   if(viewer.videoPlaying===false || viewer.framesAdvancing===false)
     return result(HEALTH.DEGRADED,"Vidéo non lue ou décodage bloqué sur la sonde","viewer");
   if(viewer.audioTrack===false) return result(HEALTH.DEGRADED,"Piste audio absente côté sonde","viewer");

@@ -15,7 +15,7 @@ function snapshot(overrides={}){
 test("green needs three fresh independent positive sources",()=>{
   assert.equal(assess(snapshot(),T).color,HEALTH.HEALTHY);
   assert.equal(assess(snapshot({viewer:null}),T).color,HEALTH.UNKNOWN);
-  assert.equal(assess(snapshot({twitch:{online:true,at:T-20_000}}),T).color,HEALTH.UNKNOWN);
+  assert.equal(assess(snapshot({twitch:{online:true,at:T-100_000}}),T).color,HEALTH.UNKNOWN);
   assert.equal(assess(snapshot({obs:{streaming:true,at:T-20_000}}),T).color,HEALTH.UNKNOWN);
   assert.equal(assess(snapshot({viewer:{videoPlaying:true,framesAdvancing:true,audioTrack:true,at:T}}),T).color,HEALTH.UNKNOWN);
 });
@@ -54,4 +54,16 @@ test("never continue showing green when probes disappear or red is suspected",()
   assert.equal(mon.update(snapshot({viewer:null}),T+10).color,HEALTH.UNKNOWN);
   mon.update(snapshot({twitch:{online:false,at:T+100}}),T+100);
   assert.equal(mon.update(snapshot({twitch:{online:false,at:T+500}}),T+500).color,HEALTH.UNKNOWN);
+});
+
+test("source-specific freshness follows Twitch 45s and OBS 3s polling",()=>{
+  const seen=T+48_000;
+  const s=snapshot({
+    obs:{streaming:true,reconnecting:false,dropRatio:.002,at:seen},
+    viewer:{videoPlaying:true,framesAdvancing:true,audioTrack:true,audioActive:true,at:seen}
+  });
+  assert.equal(assess(s,seen).color,HEALTH.HEALTHY);
+  assert.equal(assess(s,seen+91_000).color,HEALTH.UNKNOWN);
+  assert.equal(assess(snapshot({obs:{streaming:true,reconnecting:false,dropRatio:null,at:T}}),T).color,
+    HEALTH.UNKNOWN);
 });
