@@ -24,3 +24,6 @@ L'archive docs/CHATGPT_PROJECT_HISTORY.md est **partielle** et doit être enrich
 
 ## Périmètre reporté
 Normalisation de loudness cible par streamer (LUFS plutôt que simple dB), **jamais** dans le premier jalon. Chat/analytics/gestion Twitch non prioritaires.
+
+## Reprise obligatoire
+**Avant tout changement de code, lire [docs/CODEX_ACTIVE_WORK.md](docs/CODEX_ACTIVE_WORK.md)** : ce fichier sur `develop` pointe les PR et les fichiers plus récents sur les branches en cours. Les instructions précédentes restent historiques ; il ne faut pas prendre le README de `main` pour l'état actuel.
