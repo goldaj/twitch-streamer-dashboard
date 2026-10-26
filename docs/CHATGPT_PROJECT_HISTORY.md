@@ -18,3 +18,8 @@
 
 ## Confidentialité et fidélité
 Aucune conversation ancienne non accessible n'est inventée. Pas de secret, capture personnelle de stream ou export utilisateur dans le dépôt public.
+
+## GitHub exécuté le 2026-10-26
+- Commit de cadrage sur develop et PR #1 avec moteur + simulation 4 états. Actions 40365427678 et 40365363798 terminées success (simulations).
+- Tickets #2 OBS, #3 Twitch, #4 vraie sonde viewer, #5 packaging, #6 normalisation du niveau audio (hors MVP).
+- Incubateur : PR #3 non fusionnée. Aucun nouveau secret, photo ou donnée de stream réel stocké.
