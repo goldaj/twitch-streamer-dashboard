@@ -17,4 +17,6 @@ jobs:
       - run: node --test tests/*.test.cjs
       - run: |
           node --check src/core.js
+          node --check src/archive.js
+          node --check src/analytics.js
           node --check src/app.js
