@@ -4,9 +4,60 @@ const $=id=>document.getElementById(id),KEY="stream-desk-v1";
 let ctrl=null,channel="";
 const ARCHIVE_KEY="stream-desk-archive-v1";
 let archive;
+let archiveSelection=null;
 try{archive=StreamArchive.create(localStorage.getItem(ARCHIVE_KEY)||undefined);}catch(e){archive=StreamArchive.create();}
 function archiveSave(){try{localStorage.setItem(ARCHIVE_KEY,archive.exportJson());}catch(e){status("Impossible d’enregistrer l’archive localement. Exporte-la.");}}
-function archiveRender(){const s=archive.summary();$("archive-summary").textContent=s.sessions+" sessions · "+StreamDesk.duration(s.duration)+" · "+s.counts.follow+" follows notés · "+s.counts.subscription+" abonnements notés";$("archive-current").disabled=!ctrl||ctrl.snapshot().status!=="ended";const list=$("archive-list");list.replaceChildren();for(const row of archive.list()){const li=document.createElement("li");const label=document.createElement("span");label.textContent=new Date(row.created).toLocaleDateString("fr-FR")+" · "+row.channel+" · "+StreamDesk.duration(row.duration)+" · "+row.counts.follow+" follows";const button=document.createElement("button");button.textContent="Supprimer";button.addEventListener("click",()=>{if(window.confirm("Supprimer définitivement cette session de l’archive locale ?")){archive.remove(row.id);archiveSave();archiveRender();}});li.append(label," ",button);list.appendChild(li);}}
+function drawTimeBars(id,report){
+ const container=$(id);container.replaceChildren();
+ const largest=Math.max(1,...report.buckets.map(b=>b.total));
+ for(const bucket of report.buckets){
+  const bar=document.createElement("div");
+  bar.className="timelinebar";bar.tabIndex=0;
+  bar.style.height=(bucket.total===0?4:Math.max(8,100*bucket.total/largest))+"%";
+  const label=StreamDesk.duration(bucket.fromMs)+" - "+StreamDesk.duration(bucket.toMs)+
+    " : "+bucket.total+" événement(s) noté(s)";
+  bar.title=label;bar.setAttribute("role","img");bar.setAttribute("aria-label",label);
+  container.appendChild(bar);
+ }
+}
+function renderArchivedDetails(){
+ const panel=$("archive-detail");
+ const raw=archiveSelection&&JSON.parse(archive.exportJson()).sessions.find(
+   s=>s.channel+":"+s.created===archiveSelection);
+ if(!raw){panel.hidden=true;archiveSelection=null;return}
+ panel.hidden=false;
+ const report=StreamAnalytics.analyze(raw,raw.segments.at(-1)?.end??raw.created);
+ $("archive-detail-summary").textContent=
+   raw.channel+" · "+StreamDesk.duration(report.activeMs)+" diffusé · "+
+   report.eventsRecorded+" événement(s) noté(s) · "+report.eventsPerHour+
+   " événement(s)/h. "+(report.skipped?"Hors direct ignorés : "+report.skipped+".":"");
+ drawTimeBars("archive-bars",report);
+}
+function archiveRender(){
+ const s=archive.summary();
+ $("archive-summary").textContent=s.sessions+" sessions · "+StreamDesk.duration(s.duration)+
+   " · "+s.counts.follow+" follows notés · "+s.counts.subscription+" abonnements notés";
+ $("archive-current").disabled=!ctrl||ctrl.snapshot().status!=="ended";
+ const list=$("archive-list");list.replaceChildren();
+ for(const row of archive.list()){
+  const li=document.createElement("li"),label=document.createElement("span");
+  label.textContent=new Date(row.created).toLocaleDateString("fr-FR")+" · "+row.channel+
+    " · "+StreamDesk.duration(row.duration)+" · "+row.counts.follow+" follows";
+  const inspect=document.createElement("button");
+  inspect.textContent=archiveSelection===row.id?"Analyse affichée":"Analyser";
+  inspect.addEventListener("click",()=>{archiveSelection=row.id;archiveRender()});
+  const remove=document.createElement("button");
+  remove.textContent="Supprimer";
+  remove.addEventListener("click",()=>{
+   if(window.confirm("Supprimer définitivement cette session de l’archive locale ?")){
+    archive.remove(row.id);if(archiveSelection===row.id)archiveSelection=null;
+    archiveSave();archiveRender();
+   }
+  });
+  li.append(label," ",inspect," ",remove);list.appendChild(li);
+ }
+ renderArchivedDetails();
+}
 
 function status(m){$("message").textContent=m;}
 function save(){try{localStorage.setItem(KEY,ctrl.exportJson());}catch(e){status("Stockage inaccessible. Exporter la session pour conserver ses données.");}}
@@ -22,6 +73,11 @@ function render(){archiveRender();if(!ctrl){$("controls").hidden=true;return;}co
  document.querySelectorAll("[data-event]").forEach(b=>b.disabled=s.status!=="live");
  const list=$("events");list.replaceChildren();
  for(const e of s.events.slice(-60).reverse()){const li=document.createElement("li");li.textContent=new Date(e.at).toLocaleTimeString("fr-FR")+" · "+e.type+" · "+e.note;list.appendChild(li);}
+ const report=StreamAnalytics.analyze(ctrl.exportJson());
+ $("timeline-summary").textContent=StreamDesk.duration(report.activeMs)+" réellement diffusé · "+
+   report.eventsRecorded+" événement(s) noté(s) · "+report.eventsPerHour+
+   " événement(s)/h. Les pauses sont exclues.";
+ drawTimeBars("timeline-bars",report);
 }
 function act(fn){try{fn();save();render();status("Action enregistrée.");}catch(e){status(e.message);}}
 function load(){try{const name=$("channel").value;const state=ctrl?.snapshot();if(state&&["live","paused"].includes(state.status)&&state.channel!==name.trim().toLowerCase())throw new Error("Termine la session avant de changer de chaîne.");
