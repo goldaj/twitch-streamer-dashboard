@@ -1,0 +1,22 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sonde spectateur : expérience consentie</title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/probe/app.mjs"></script></head><body>
+<main><h1>Sonde spectateur <small>expérience audio/vidéo locale</small></h1>
+<p>Ce laboratoire ne surveille aucun onglet sans ton intervention. Ouvre la chaîne Twitch sur un autre onglet, clique « Capturer » puis sélectionne manuellement <strong>l'onglet Twitch</strong> et coche le partage de son lorsqu'il est proposé. Ce n'est pas encore une preuve de stream sain ni un composant du voyant vert.</p>
+<section class="controls">
+<button id="start">Capturer volontairement un onglet</button>
+<button id="stop" disabled>Arrêter la capture</button>
+<p id="state" aria-live="polite">Aucune capture en cours.</p>
+</section>
+<section class="stage" style="padding:20px">
+  <h2>Contrôle visuel de ce qui est réellement capturé</h2>
+  <video id="preview" autoplay playsinline muted style="display:block;width:100%;max-width:700px;min-height:160px;background:#000" controls></video>
+  <p id="video-status">Aucune vidéo reçue.</p>
+  <h2>Signal audio de l'onglet</h2>
+  <p id="audio-status">Aucune piste audio analysée.</p>
+  <p id="statistics" aria-live="polite">Aucune métrique.</p>
+</section>
+<footer><strong>Limitations :</strong> l'outil ne peut pas distinguer à lui seul les images du player Twitch des animations de l'onglet. Le RMS/dBFS indique une énergie sonore reçue par la capture d'onglet, pas le volume physique des haut-parleurs. Silence volontaire ≠ panne. Si l'audio local cesse, arrête la capture ; ne réinjecte pas le flux dans ton live sous peine d'écho. Aucun média n'est enregistré ni transmis au serveur.</footer>
+</main></body></html>
