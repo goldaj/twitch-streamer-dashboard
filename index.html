@@ -1,0 +1,22 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stream Desk | Twitch</title>
+<style>:root{font:16px/1.5 system-ui,sans-serif;color-scheme:dark}*{box-sizing:border-box}body{background:#101023;color:#f5f0ff;margin:0}main{max-width:1460px;padding:24px;margin:auto}
+h1{font-size:clamp(2rem,4vw,3rem);margin:0}h2{font-size:1.18rem;margin:0 0 12px}p{color:#bab8d9}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(330px,1fr);gap:18px;margin-top:22px}
+.panel{background:#1c1e3b;border:1px solid #48476b;border-radius:18px;padding:18px;margin-bottom:18px}
+button,input{font:inherit;background:#34365c;color:#fff;border:1px solid #696d97;padding:10px 12px;border-radius:9px}button{cursor:pointer}button:disabled{opacity:.4;cursor:default}button:not(:disabled):hover{background:#4a4d82}button:focus-visible,input:focus-visible{outline:3px solid #cfb3ff}
+.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:10px}.primary{background:#7346b7}
+iframe{width:100%;border:0;background:#09091a;border-radius:12px}#video{aspect-ratio:16/9}#chat{height:580px}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.metric{padding:16px;background:#292b50;border-radius:12px}.metric strong{display:block;font-size:1.8rem}#events{max-height:220px;overflow:auto;overflow-wrap:anywhere}#events li{padding:6px 0;border-bottom:1px solid #414365}#message{color:#d5b9ff;min-height:1.5em}#controls[hidden]{display:none}
+@media(max-width:850px){.layout{grid-template-columns:1fr}#chat{height:380px}}@media(max-width:420px){input{max-width:100%}}
+</style><script defer src="src/core.js"></script><script defer src="src/app.js"></script></head>
+<body><main><h1>Stream Desk</h1><p>Chat et vidéo Twitch officiels, régie personnelle, événements notés manuellement et exports. Aucun faux compteur automatique.</p>
+<div class="row"><label for="channel">Chaîne</label><input id="channel" placeholder="nom_de_chaine" maxlength="25"><button id="load" class="primary">Charger</button><button id="new">Nouvelle session</button></div>
+<p id="message" role="status" aria-live="polite">Entre le nom d'une chaîne.</p>
+<div class="layout"><div><section class="panel"><h2>Vidéo Twitch</h2><iframe id="video" title="Lecteur vidéo officiel Twitch" allow="autoplay; fullscreen" allowfullscreen></iframe><p>Le lecteur nécessite Internet et peut exiger une session Twitch.</p></section>
+<section class="panel" id="controls" hidden><h2>Régie de session</h2><div class="metrics"><div class="metric">Temps actif<strong id="timer">00:00:00</strong></div><div class="metric">Statut<strong id="state">idle</strong></div></div>
+<div class="row"><button id="start" class="primary">Démarrer / Reprendre</button><button id="pause">Pause</button><button id="finish">Terminer</button></div>
+<h2 style="margin-top:20px">Journal manuel</h2><label for="note">Note optionnelle</label> <input id="note" maxlength="160" placeholder="Moments marquants">
+<div class="row"><button data-event="follow">Follow <span id="count-follow">0</span></button><button data-event="subscription">Sub <span id="count-subscription">0</span></button><button data-event="raid">Raid <span id="count-raid">0</span></button><button data-event="clip">Clip <span id="count-clip">0</span></button><button data-event="marker">Marqueur <span id="count-marker">0</span></button></div>
+<h2 style="margin-top:20px">Événements récents</h2><ol id="events"></ol>
+<div class="row"><button id="json">Sauvegarde JSON</button><button id="csv">Exporter CSV</button><label for="import">Importer JSON</label><input id="import" type="file" accept=".json"></div><p>Les événements et statistiques sont stockés dans ce navigateur. Aucune API Twitch n'est interrogée pour les compteurs.</p></section></div>
+<aside class="panel"><h2>Chat officiel Twitch</h2><iframe id="chat" title="Chat officiel Twitch"></iframe></aside></div>
+<footer><p>Pour démarrer : <code>python -m http.server 8000</code> puis ouvrir <code>http://localhost:8000/</code>.</p></footer></main></body></html>

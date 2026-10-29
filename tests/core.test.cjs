@@ -1,0 +1,8 @@
+const t=require("node:test"),a=require("node:assert/strict"),S=require("../src/core.js");
+t("session clock excludes pauses and survives JSON import",()=>{const c=S.controller(S.newSession("Streamer_1",1000));c.start(2000);c.record("follow","hello",3000);c.pause(5000);a.equal(c.snapshot(8000).elapsedMs,3000);c.start(10000);c.finish(12000);a.equal(c.snapshot(15000).elapsedMs,5000);a.equal(S.controller(c.exportJson()).snapshot(15000).counts.follow,1);});
+t("invalid transitions do not mutate state",()=>{const c=S.controller(S.newSession("name001",1000));a.throws(()=>c.pause(2000));a.equal(c.snapshot().status,"idle");c.start(2000);a.throws(()=>c.start(3000));a.throws(()=>c.record("wrong","",3000));a.equal(c.snapshot().events.length,0);});
+t("no backward time",()=>{const c=S.controller(S.newSession("streamer",1000));a.throws(()=>c.start(999));c.start(2000);a.throws(()=>c.pause(1999));c.pause(3000);a.throws(()=>c.start(2999));});
+t("CSV escapes spreadsheet formulas and quotes",()=>{const c=S.controller(S.newSession("streamer",1000));c.start(2000);c.record("marker",'=SUM("A1")',3000);const csv=S.csv(c.exportJson());a.match(csv,/"'=SUM\(""A1""\)"/);});
+t("invalid imported state or channel rejected",()=>{a.throws(()=>S.newSession("bad name"));const s=S.newSession("streamer",1000);s.status="live";a.throws(()=>S.controller(s));});
+t("snapshot returns copies",()=>{const c=S.controller(S.newSession("streamer",1000));c.start(2000);c.record("clip","hello",3000);const s=c.snapshot();s.events[0].note="changed";a.equal(c.snapshot().events[0].note,"hello");});
+t("duration formatting",()=>a.equal(S.duration(3661500),"01:01:01"));
