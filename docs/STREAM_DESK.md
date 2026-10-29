@@ -25,3 +25,9 @@ Les événements et notes sont enregistrés dans le `localStorage` de l'origine.
 Une session **terminée** peut être ajoutée à l'archive via **Archiver la session terminée**. L'écran calcule les durées et événements agrégés, trie les diffusions passées et autorise l'export complet en JSON, ainsi qu'un import fusionnant les sessions sans doublons. Supprimer une session exige une confirmation. L'archive reste locale et distincte de la session courante. Maximum 100 sessions pour contrôler la taille du localStorage ; aucune suppression automatique des anciennes sessions. Tests de validation, de fusion atomique et d'agrégation : `tests/archive.test.cjs`.
 
 Limites : une session terminée est immuable dans cette première archive, pas d'édition/reprise ; pas de backend, pas de synchronisation multi-appareils. L'import exige des sessions complètes et cohérentes.
+
+## Troisième amélioration : chronologie hors pauses
+
+`src/analytics.js` transforme chaque horodatage en un **temps actif cumulé** au sein des segments de direct. Le résultat est visualisé par tranches (de 1 à 24 barres selon la durée), avec la cadence d'événements **notés manuellement** par heure réellement diffusée. Les événements horodatés pendant une pause sont ignorés et comptés comme anomalies ; ils n'alimentent pas les barres. Les sessions archivées sont inspectables via « Analyser », sans modification de l'archive.
+
+Guide complet : `docs/ACTIVE_TIME_ANALYTICS.md`. Tests `tests/analytics.test.cjs`. Aucune métrique Twitch externe, aucune API supplémentaire.
