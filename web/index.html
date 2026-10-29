@@ -1,0 +1,35 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stream Health | simulation</title>
+<link rel="stylesheet" href="./style.css"><script type="module" src="./app.mjs"></script></head>
+<body>
+<main>
+<header><h1>Stream Health <small>prototype du voyant</small></h1>
+<p>Pastille discrète en haut à droite. Cette démonstration simule les incidents : <strong>aucune connexion Twitch, OBS ni sonde spectateur réelle</strong> n'est encore effectuée.</p></header>
+<section class="demo-screen" aria-label="Simulation de l'écran du streamer">
+<div class="scene-text">STREAM EN COURS <span>(simulation)</span></div>
+<div id="indicator" class="indicator" role="status" aria-live="polite" tabindex="0" aria-describedby="reason" title="État du stream simulé">
+  <span id="dot" class="dot" aria-hidden="true"></span>
+  <span id="short-label">En attente</span>
+</div>
+<div id="details" class="details">
+  <strong id="detail-title">Surveillance en attente</strong>
+  <p id="reason">Aucun scénario actif.</p><small id="source">Sources simulées</small>
+</div>
+</section>
+<section class="panel">
+<h2>Simuler un incident</h2>
+<div id="scenarios" class="scenarios">
+<button data-scenario="ok">Tout fonctionne</button>
+<button data-scenario="no-audio">Son absent</button>
+<button data-scenario="no-video">Vidéo figée</button>
+<button data-scenario="reconnect">OBS reconnecte</button>
+<button data-scenario="offline">Coupure imprévue</button>
+<button data-scenario="missing">Sonde indisponible</button>
+<button data-scenario="intentional-stop">Fin normale du live</button>
+</div>
+<label><input id="sound-expected" type="checkbox" checked> Il devrait y avoir du son pendant le stream</label>
+<p id="diagnostics" role="status" aria-live="polite">Sélectionne un scénario pour faire évoluer l'indicateur.</p>
+</section>
+<footer>Pour la première vraie version, il faudra brancher les données Twitch, OBS et une sonde de lecture côté spectateur. Une pastille verte simulée ne prouve pas que quelqu'un entend ton live.</footer>
+</main></body></html>
