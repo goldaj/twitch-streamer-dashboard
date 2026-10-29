@@ -19,3 +19,9 @@ Les événements et notes sont enregistrés dans le `localStorage` de l'origine.
 - Sujets de valeur : enregistrer plusieurs sessions dans un journal historique, visualiser les métriques multi-sessions, ajouter un import/export cumulatif sans perte, intégrer Twitch Helix via OAuth PKCE **optionnel** (sécurité token/consentement), lien explicite avec OBS.
 - Éviter d'annoncer des viewers/followers capturés automatiquement tant qu'aucune connexion API autorisée n'existe. Maintenir les tests des transitions et des exports.
 - Aucun test visuel complet des embeds n'a été effectué au moment du premier développement.
+
+## Deuxième amélioration fonctionnelle : historique multi-sessions
+
+Une session **terminée** peut être ajoutée à l'archive via **Archiver la session terminée**. L'écran calcule les durées et événements agrégés, trie les diffusions passées et autorise l'export complet en JSON, ainsi qu'un import fusionnant les sessions sans doublons. Supprimer une session exige une confirmation. L'archive reste locale et distincte de la session courante. Maximum 100 sessions pour contrôler la taille du localStorage ; aucune suppression automatique des anciennes sessions. Tests de validation, de fusion atomique et d'agrégation : `tests/archive.test.cjs`.
+
+Limites : une session terminée est immuable dans cette première archive, pas d'édition/reprise ; pas de backend, pas de synchronisation multi-appareils. L'import exige des sessions complètes et cohérentes.

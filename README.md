@@ -1,6 +1,6 @@
 # Stream Desk Twitch
 
-Tableau de bord de streaming utilisable en local : **lecteur vidéo/chat Twitch officiels**, chronomètre de session, événements notés manuellement, exports JSON/CSV.
+Tableau de bord de streaming utilisable en local : **lecteur vidéo/chat Twitch officiels**, chronomètre de session, événements notés manuellement, exports JSON/CSV et **historique multi-sessions** avec statistiques cumulées, fusion de sauvegardes et suppression confirmée.
 
 ## Démarrer
 
