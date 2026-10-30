@@ -27,3 +27,9 @@ Inspection GitHub : 6 branches, 4 PR et racine. Aucun flux OBS/Twitch ni session
 5. Les branches de fonctionnalités sont comprises dans `main` ; ne pas recréer de PR, et conserver `develop` tant que les workflows en dépendent.
 
 Tests réels et passage en production non vérifiés pendant la revue.
+
+
+## Observation CI GitHub (30 octobre 2026)
+- [Stream Desk CI](https://github.com/goldaj/twitch-streamer-dashboard/actions/runs/41047401162) : **success** sur commit documentaire.
+
+Les contrôles ci-dessus ne démontrent ni la validité fonctionnelle en environnement réel ni la publication d'une release. Ne pas substituer ce statut aux tests manuels et matériels prévus dans la passation.
